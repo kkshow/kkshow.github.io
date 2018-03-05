@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="docker," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="http://p3gt0myn4.bkt.clouddn.com/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言Docker是一种容器平台技术，在容器技术的基础上进行了扩展优化，使容器能够拥有虚拟机的特性而又比虚拟机更快捷、轻便。 总的来说docker绝对是时下非常值得学习的技术之一。 docker 安装1、docker的安装非常简单，只需要执行官方提供的脚本就可以了。12345678// 官方脚本安装wget -qO- https://get.docker.com/ | sh// 阿里云脚本安装cur">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker中经常用到的命令">
+<meta property="og:url" content="http://jianyee.cn/2018/01/23/docker-01/index.html">
+<meta property="og:site_name" content="一入码门深似海">
+<meta property="og:description" content="前言Docker是一种容器平台技术，在容器技术的基础上进行了扩展优化，使容器能够拥有虚拟机的特性而又比虚拟机更快捷、轻便。 总的来说docker绝对是时下非常值得学习的技术之一。 docker 安装1、docker的安装非常简单，只需要执行官方提供的脚本就可以了。12345678// 官方脚本安装wget -qO- https://get.docker.com/ | sh// 阿里云脚本安装cur">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T08:40:02.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker中经常用到的命令">
+<meta name="twitter:description" content="前言Docker是一种容器平台技术，在容器技术的基础上进行了扩展优化，使容器能够拥有虚拟机的特性而又比虚拟机更快捷、轻便。 总的来说docker绝对是时下非常值得学习的技术之一。 docker 安装1、docker的安装非常简单，只需要执行官方提供的脚本就可以了。12345678// 官方脚本安装wget -qO- https://get.docker.com/ | sh// 阿里云脚本安装cur">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jianyee.cn/2018/01/23/docker-01/"/>
+
+
+
+
+
+  <title>Docker中经常用到的命令 | 一入码门深似海</title>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65131446";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一入码门深似海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不写点什么的话就什么都不记得了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2018/01/23/docker-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="邝咖啡">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一入码门深似海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Docker中经常用到的命令</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-23T14:04:49+08:00">
+                2018-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Docker是一种容器平台技术，在容器技术的基础上进行了扩展优化，使容器能够拥有虚拟机的特性而又比虚拟机更快捷、轻便。</p>
+<p>总的来说docker绝对是时下非常值得学习的技术之一。</p>
+<h2 id="docker-安装"><a href="#docker-安装" class="headerlink" title="docker 安装"></a>docker 安装</h2><p>1、docker的安装非常简单，只需要执行官方提供的脚本就可以了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 官方脚本安装</span><br><span class="line">wget -qO- https://get.docker.com/ | sh</span><br><span class="line"></span><br><span class="line">// 阿里云脚本安装</span><br><span class="line">curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -</span><br><span class="line"></span><br><span class="line">// daocloud脚本安装</span><br><span class="line">curl -sSL https://get.daocloud.io/docker | sh</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>当然由于墙的问题，执行这个脚本有可能会异常缓慢，具体的解决方法就是更换linux源即可。</p>
+</blockquote>
+<p>2、当要以非root用户可以直接运行docker时，需要执行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker 账户名</span><br></pre></td></tr></table></figure></p>
+<p>否则系统会提示以下报错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker: Cannot connect to the Docker daemon. Is the docker daemon running on this host?</span><br></pre></td></tr></table></figure></p>
+<p>3、配置docker的镜像源<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 修改配置文件 /etc/docker/daemon.json</span><br><span class="line">vim /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">// 加入下面的内容：</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 然后重启docker服务即可</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>由于不可描述的原因，docker的源下载非常慢，这里使用DaoCloud的源，详见 <a href="https://www.docker-cn.com/registry-mirror" target="_blank" rel="noopener">https://www.docker-cn.com/registry-mirror</a></p>
+</blockquote>
+<a id="more"></a>
+<h2 id="镜像运行命令"><a href="#镜像运行命令" class="headerlink" title="镜像运行命令"></a>镜像运行命令</h2><p>镜像运行的命令比较复杂，这里把常用的几个命令放这里，当作案例。</p>
+<p>1、运行busybox<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// -it 终端交互运行</span><br><span class="line">docker run -it busybox</span><br></pre></td></tr></table></figure></p>
+<p>2、运行nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// -d 守护进程运行</span><br><span class="line">// -p 端口映射</span><br><span class="line">// -v 文件路径映射</span><br><span class="line">// -- mount type=bind,source=/var/www/html,target=/usr/share/nginx/html,readonly </span><br><span class="line">docker run -d -p 80:80 -v /var/www/html:/usr/share/nginx/html nginx:v2</span><br><span class="line"></span><br><span class="line">// 另一种方式</span><br><span class="line">// -- mount 和上面一样，也是用于文件映射，但是有不同的就是如果镜像里面的文件不存在，</span><br><span class="line">// 则生成容器的时候回报错。</span><br><span class="line">// readonly 参数可以不传，如果传了，表示对应容器内的文件只读。</span><br><span class="line">docker run -d -p 80:80 \ </span><br><span class="line">    --mount type=bind,source=/var/www/html,target=/usr/share/nginx/html,readonly \ </span><br><span class="line">    nginx:v2</span><br><span class="line">    </span><br><span class="line">// 如果不想指定web容器的端口，则可以使用 -P（注意这里是大写） 来随机映射</span><br><span class="line">docker run -d -P nginx:v2</span><br></pre></td></tr></table></figure></p>
+<p>3、启用一个ubuntu终端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// --rm 容器退出后自动删除</span><br><span class="line">// --restart=always 自动重启</span><br><span class="line">// --name 容器名称 命名容器</span><br><span class="line">docker run -it --rm --restart=always --name myubuntu ubuntu:latest</span><br></pre></td></tr></table></figure></p>
+<p>4、容器互联</p>
+<blockquote>
+<p>通过创建一个docker网络，让两个容器运行在同一个网络中。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">1) 创建一个docker网络</span><br><span class="line">docker network create -d bridge my-net</span><br><span class="line"></span><br><span class="line">2) 运行一个容器并连接到新建的 my-net 网络</span><br><span class="line">docker run -it --rm --name busybox1 --network my-net busybox sh</span><br><span class="line"></span><br><span class="line">3) 打开新的终端，再运行一个容器并加入到 my-net 网络</span><br><span class="line">docker run -it --rm --name busybox2 --network my-net busybox sh</span><br><span class="line"></span><br><span class="line">4) 在 busybox1 容器输入以下命令</span><br><span class="line">/ # ping busybox2</span><br><span class="line">PING busybox2 (172.19.0.3): 56 data bytes</span><br><span class="line">64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.072 ms</span><br><span class="line">64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.118 ms</span><br><span class="line"></span><br><span class="line">// 可以看到在 busybox1 中是能请求到 busybox2 的。</span><br><span class="line">// 同样，在 busybox 中也能请求到 busybox1</span><br></pre></td></tr></table></figure>
+<h2 id="服务命令"><a href="#服务命令" class="headerlink" title="服务命令"></a>服务命令</h2><p>1、docker的启动/重启/关闭<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service docker start/restart/stop</span><br></pre></td></tr></table></figure></p>
+<p>2、安装Docker管理工具<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 9001:9000 -v &quot;/var/run/docker.sock:/var/run/docker.sock&quot; portainer/portainer</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>portainer 是一款易用的docker图形管理工具，地址如下：<a href="https://github.com/portainer/portainer" target="_blank" rel="noopener">https://github.com/portainer/portainer</a></p>
+</blockquote>
+<h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><p>1、查询docker镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></p>
+<p>2、获取镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull (镜像下载地址/镜像名称)</span><br></pre></td></tr></table></figure></p>
+<p>3、删除镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 通过ID删除</span><br><span class="line">docker rmi (镜像ID)</span><br><span class="line"></span><br><span class="line">// 通过tag删除</span><br><span class="line">docker rmi (tag)</span><br><span class="line"></span><br><span class="line">// 批量删除</span><br><span class="line">docker rmi $(docker images | grep &quot;模糊匹配内容&quot; | awk &apos;&#123;print $3&#125;&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>4、转移镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 保存镜像</span><br><span class="line">docker save compose01_web(镜像名) &gt; t.tar(目标文件)</span><br><span class="line"></span><br><span class="line">// 读取镜像</span><br><span class="line">docker load --input ./t.tar(读取的文件)</span><br><span class="line"></span><br><span class="line">// 也可以一步到位，直接通过ssh发送到其他机器</span><br><span class="line">docker save &lt;镜像名&gt; | bzip2 | pv | ssh &lt;用户名&gt;@&lt;主机名&gt; &apos;cat | docker load&apos;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>docker可以建立自有镜像仓库，但是一般来说我们还是直接转移会方便一些。</p>
+</blockquote>
+<p>5、安装私有仓库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 获取仓库的镜像</span><br><span class="line">sudo docker pull registry</span><br><span class="line"></span><br><span class="line">// 启动镜像，将镜像的存放地址映射为非临时目录</span><br><span class="line">sudo docker run -d -p 5000:5000 -v /opt/data/registry:/tmp/registry registry</span><br><span class="line"></span><br><span class="line">// 启动完成后，如果我们直接push镜像，会出现如下提示：</span><br><span class="line">Error response from daemon: Get https://10.10.239.222:5000/v1/_ping: http: server gave HTTP response to HTTPS client</span><br><span class="line"></span><br><span class="line">// 这是由于新版本的docker私有库要求https传输镜像，所以要进行一些设置，让我们能够正常上传镜像。</span><br><span class="line"></span><br><span class="line">// 操作步骤如下：</span><br><span class="line">// 打开配置文件 /etc/docker/daemon.json，加入json格式的内容</span><br><span class="line">&#123;</span><br><span class="line">  &quot;其他配置&quot;: &quot;其他配置&quot;, // 这里是演示，如果已经有其他配置，共用一个json</span><br><span class="line">  &quot;insecure-registries&quot;: [&quot;10.10.239.222:5000&quot;] // 不要求使用ssl的库以及端口。</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 重启docker即可</span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>此外：不同版本的linux的设置方式可能有点不同，具体可以参考这个文档 <a href="https://yeasy.gitbooks.io/docker_practice/content/repository/registry.html" target="_blank" rel="noopener">https://yeasy.gitbooks.io/docker_practice/content/repository/registry.html</a><br>如果需要配置有认证的registry，参考这个文档：<a href="https://yeasy.gitbooks.io/docker_practice/content/repository/registry_auth.html" target="_blank" rel="noopener">https://yeasy.gitbooks.io/docker_practice/content/repository/registry_auth.html</a></p>
+</blockquote>
+<p>参考文档：</p>
+<ul>
+<li><a href="http://blog.csdn.net/wangtaoking1/article/details/44180901" target="_blank" rel="noopener">http://blog.csdn.net/wangtaoking1/article/details/44180901</a></li>
+<li><a href="http://www.jianshu.com/p/00ac18fce367" target="_blank" rel="noopener">http://www.jianshu.com/p/00ac18fce367</a></li>
+<li><a href="https://my.oschina.net/yyflyons/blog/656278" target="_blank" rel="noopener">https://my.oschina.net/yyflyons/blog/656278</a></li>
+</ul>
+<p>6、上传镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 上传镜像</span><br><span class="line">docker pull</span><br></pre></td></tr></table></figure></p>
+<p>7、查询镜像 - 这个命令用于查询私有的镜像库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 查询镜像中存在的分类</span><br><span class="line">curl -X GET http://172.16.9.30:5000/v2/_catalog</span><br><span class="line"></span><br><span class="line">// 返回</span><br><span class="line">&#123;&quot;repositories&quot;:[&quot;busybox&quot;]&#125;</span><br><span class="line"></span><br><span class="line">// 查询镜像的tag</span><br><span class="line">curl -X GET http://172.16.9.30:5000/v2/busybox/tags/list</span><br><span class="line"></span><br><span class="line">// 返回</span><br><span class="line">&#123;&quot;name&quot;:&quot;busybox&quot;,&quot;tags&quot;:[&quot;latest&quot;]&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>具体的API查询地址：<a href="https://docs.docker.com/registry/spec/api/" target="_blank" rel="noopener">https://docs.docker.com/registry/spec/api/</a></p>
+</blockquote>
+<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><p>1、查询当前容器状态<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这里可以不带 -a ，不带的情况下只查询当前在运行的容器。</p>
+</blockquote>
+<p>2、停止容器运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop (容器ID)</span><br></pre></td></tr></table></figure></p>
+<p>3、删除容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker rm (容器ID)</span><br><span class="line"></span><br><span class="line">// 批量删除</span><br><span class="line">docker rm $(docker ps -qa)</span><br><span class="line"></span><br><span class="line">// 批量删除</span><br><span class="line">docker ps -qa | xargs -n 1 docker rm</span><br></pre></td></tr></table></figure></p>
+<p>4、进入一个已有容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -it webserver bash</span><br></pre></td></tr></table></figure></p>
+<p>5、转移容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 导出容器</span><br><span class="line">docker export</span><br><span class="line"></span><br><span class="line">// 导入容器</span><br><span class="line">docker import</span><br></pre></td></tr></table></figure></p>
+<p>6、清除所有未运行状态的容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container prune</span><br></pre></td></tr></table></figure></p>
+<p>7、设置容器的dns<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 进入docker的配置文件</span><br><span class="line">cd /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">// 增加下面的内容，然后重启docker服务</span><br><span class="line">&#123;</span><br><span class="line">  &quot;dns&quot; : [</span><br><span class="line">    &quot;114.114.114.114&quot;,</span><br><span class="line">    &quot;8.8.8.8&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 后续的容器dns都会从读取以上配置的dns</span><br><span class="line">docker run -it --rm ubuntu cat etc/resolv.conf</span><br><span class="line"></span><br><span class="line">// 输出</span><br><span class="line">nameserver 114.114.114.114</span><br><span class="line">nameserver 8.8.8.8</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://www.runoob.com/docker/docker-tutorial.html" target="_blank" rel="noopener">http://www.runoob.com/docker/docker-tutorial.html</a></li>
+<li><a href="https://yeasy.gitbooks.io/docker_practice/content/" target="_blank" rel="noopener">https://yeasy.gitbooks.io/docker_practice/content/</a></li>
+<li><a href="https://github.com/docker-library/docs" target="_blank" rel="noopener">https://github.com/docker-library/docs</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/30/vue-01/" rel="next" title="vue开发环境配置">
+                <i class="fa fa-chevron-left"></i> vue开发环境配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/30/docker-02/" rel="prev" title="Docker-compose使用详解">
+                Docker-compose使用详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg"
+               alt="邝咖啡" />
+          <p class="site-author-name" itemprop="name">邝咖啡</p>
+           
+              <p class="site-description motion-element" itemprop="description">邝咖啡的工作记录</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-安装"><span class="nav-number">2.</span> <span class="nav-text">docker 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像运行命令"><span class="nav-number">3.</span> <span class="nav-text">镜像运行命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务命令"><span class="nav-number">4.</span> <span class="nav-text">服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像命令"><span class="nav-number">5.</span> <span class="nav-text">镜像命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器命令"><span class="nav-number">6.</span> <span class="nav-text">容器命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邝咖啡</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

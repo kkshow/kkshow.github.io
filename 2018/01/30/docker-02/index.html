@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="docker," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="http://p3gt0myn4.bkt.clouddn.com/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Docker ComposeDocker Compose是官方开源的一个Docker容器编排软件，定位于将多个容器编排在起义行程一组服务。  官方手册地址：https://docs.docker.com/compose/overview/  关键概念项目通过compose生成的一组服务我们称之为项目，项目一般由多个容器组成，共享生命周期。 安装1234567891011// 直接通过下载compo">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker-compose使用详解">
+<meta property="og:url" content="http://jianyee.cn/2018/01/30/docker-02/index.html">
+<meta property="og:site_name" content="一入码门深似海">
+<meta property="og:description" content="Docker ComposeDocker Compose是官方开源的一个Docker容器编排软件，定位于将多个容器编排在起义行程一组服务。  官方手册地址：https://docs.docker.com/compose/overview/  关键概念项目通过compose生成的一组服务我们称之为项目，项目一般由多个容器组成，共享生命周期。 安装1234567891011// 直接通过下载compo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T08:40:02.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker-compose使用详解">
+<meta name="twitter:description" content="Docker ComposeDocker Compose是官方开源的一个Docker容器编排软件，定位于将多个容器编排在起义行程一组服务。  官方手册地址：https://docs.docker.com/compose/overview/  关键概念项目通过compose生成的一组服务我们称之为项目，项目一般由多个容器组成，共享生命周期。 安装1234567891011// 直接通过下载compo">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jianyee.cn/2018/01/30/docker-02/"/>
+
+
+
+
+
+  <title>Docker-compose使用详解 | 一入码门深似海</title>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65131446";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一入码门深似海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不写点什么的话就什么都不记得了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2018/01/30/docker-02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="邝咖啡">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一入码门深似海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Docker-compose使用详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-30T12:16:42+08:00">
+                2018-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><p>Docker Compose是官方开源的一个Docker容器编排软件，定位于将多个容器编排在起义行程一组服务。</p>
+<blockquote>
+<p>官方手册地址：<a href="https://docs.docker.com/compose/overview/" target="_blank" rel="noopener">https://docs.docker.com/compose/overview/</a></p>
+</blockquote>
+<h2 id="关键概念"><a href="#关键概念" class="headerlink" title="关键概念"></a>关键概念</h2><h3 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h3><p>通过compose生成的一组服务我们称之为项目，项目一般由多个容器组成，共享生命周期。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 直接通过下载compose的执行文件即可</span><br><span class="line">sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line">// 下载完成后，进行授权即可使用</span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line">// 查看一下版本，输出以下内容则说明安装成功</span><br><span class="line">docker-compose version 1.18.0, build 8dd22a9</span><br><span class="line">docker-py version: 2.6.1</span><br><span class="line">CPython version: 2.7.13</span><br><span class="line">OpenSSL version: OpenSSL 1.0.1t  3 May 2016</span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="首先来一个简单的例子"><a href="#首先来一个简单的例子" class="headerlink" title="首先来一个简单的例子"></a>首先来一个简单的例子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// 创建一个新目录</span><br><span class="line">cd /var/local</span><br><span class="line"></span><br><span class="line">// 创建compose的目录</span><br><span class="line">mkdir tomcat_compose</span><br><span class="line"></span><br><span class="line">// 创建compose的生成文件</span><br><span class="line">touch docker-compose.yml</span><br><span class="line"></span><br><span class="line">// 进入docker-compose.yml，写入以下内容</span><br><span class="line">version: &apos;3&apos;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: &quot;tomcat&quot;</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;33338:8080&quot;</span><br><span class="line"></span><br><span class="line">// 保存文件后，执行docker-compose up运行案例</span><br><span class="line">docker-compose up</span><br><span class="line"></span><br><span class="line">// 然后docker-compose就会开始构建你的项目了</span><br><span class="line">// 构建输出...</span><br><span class="line"></span><br><span class="line">// 构建完成后，访问33338端口可以看到输出信息</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看的出来，其实docker-compose是另一种方式的docker容器构建方式。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="别人给的一个例子"><a href="#别人给的一个例子" class="headerlink" title="别人给的一个例子"></a>别人给的一个例子</h3><p>1、创建一个app.py文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask</span><br><span class="line">from redis import Redis</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">redis = Redis(host=&apos;redis&apos;, port=6379)</span><br><span class="line"></span><br><span class="line">@app.route(&apos;/&apos;)</span><br><span class="line">def hello():</span><br><span class="line">    count = redis.incr(&apos;hits&apos;)</span><br><span class="line">    return &apos;Hello World! 该页面已被访问 &#123;&#125; 次。\n&apos;.format(count)</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    app.run(host=&quot;0.0.0.0&quot;, debug=True)</span><br></pre></td></tr></table></figure></p>
+<p>2、创建一个Dockerfile文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM python:3.6-alpine</span><br><span class="line">ADD . /code</span><br><span class="line">WORKDIR /code</span><br><span class="line">RUN pip install redis flask</span><br><span class="line">CMD [&quot;python&quot;, &quot;app.py&quot;]</span><br></pre></td></tr></table></figure>
+<p>3、创建一个docker-compose.yml文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">version: &apos;3&apos; // 注意，这里的3是指docker-compose引擎识别的yml格式，一般用3就可以了</span><br><span class="line">services:</span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    build: .</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;5000:5000&quot;</span><br><span class="line">    depends_on:</span><br><span class="line">      - redis</span><br><span class="line"></span><br><span class="line">  redis:</span><br><span class="line">    image: &quot;redis:alpine&quot;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意,yml文件里面的缩进为2个空格</p>
+</blockquote>
+<p>4、执行docker-compose up构建<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// 构建输出</span><br></pre></td></tr></table></figure></p>
+<p>5、构建完成后，访问 ip:5000，返回 Hello World! 该页面已被访问 N 次。</p>
+<blockquote>
+<p>从docker-compose.yml的结构上看出，这里用了两个镜像来实现这组服务，APP中调用了redis的自增命令来实现计数。</p>
+</blockquote>
+<p><strong> 另外有一个没有说到的点是，compose会把这两个容器放置到一个网络中，所以web端是可以请求到redis的。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// 查询一下生成的两个容器</span><br><span class="line">docker ps | grep compose01</span><br><span class="line"></span><br><span class="line">// 输出</span><br><span class="line">ID              ...    NAMES</span><br><span class="line">82731293d9de    ...    compose01_web_1</span><br><span class="line">8d9d8b80de9f    ...    compose01_redis_1</span><br><span class="line"></span><br><span class="line">// 查询一下先有docker网络</span><br><span class="line">docker network ls | grep compose01 // 这个compose01是我构建时的目录</span><br><span class="line"></span><br><span class="line">// 输出</span><br><span class="line">1f38316baee8    compose01_default    bridge    local</span><br><span class="line"></span><br><span class="line">// 查询web的网络</span><br><span class="line">docker inspect compose01_web_1</span><br><span class="line"></span><br><span class="line">// 输出</span><br><span class="line">...</span><br><span class="line">    &quot;Networks&quot;: &#123;</span><br><span class="line">        &quot;compose01_default&quot;: &#123;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">// 查询redis的网络</span><br><span class="line">docker inspect compose01_redis_1</span><br><span class="line"></span><br><span class="line">// 输出</span><br><span class="line">...</span><br><span class="line">    &quot;Networks&quot;: &#123;</span><br><span class="line">        &quot;compose01_default&quot;: &#123;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>由此看出两容器使用的网络相同，验证上面的结论。</p>
+</blockquote>
+<h3 id="wordpress案例"><a href="#wordpress案例" class="headerlink" title="wordpress案例"></a>wordpress案例</h3><p>创建wordpress的目录，然后创建docker-compose.yml文件，运行docker-compose up命令，然后访问就可以看到wordpress的安装页面了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line"></span><br><span class="line">   db:</span><br><span class="line">     image: mysql:5.7</span><br><span class="line">     volumes:</span><br><span class="line">       - db_data:/var/lib/mysql</span><br><span class="line">     restart: always</span><br><span class="line">     environment:</span><br><span class="line">       MYSQL_ROOT_PASSWORD: somewordpress</span><br><span class="line">       MYSQL_DATABASE: wordpress</span><br><span class="line">       MYSQL_USER: wordpress</span><br><span class="line">       MYSQL_PASSWORD: wordpress</span><br><span class="line"></span><br><span class="line">   wordpress:</span><br><span class="line">     depends_on:</span><br><span class="line">       - db</span><br><span class="line">     image: wordpress:latest</span><br><span class="line">     ports:</span><br><span class="line">       - &quot;8000:80&quot;</span><br><span class="line">     restart: always</span><br><span class="line">     environment:</span><br><span class="line">       WORDPRESS_DB_HOST: db:3306</span><br><span class="line">       WORDPRESS_DB_USER: wordpress</span><br><span class="line">       WORDPRESS_DB_PASSWORD: wordpress</span><br><span class="line">volumes:</span><br><span class="line">    db_data:</span><br></pre></td></tr></table></figure></p>
+<h2 id="删除项目"><a href="#删除项目" class="headerlink" title="删除项目"></a>删除项目</h2><p>在compose的构建目录下直接运行 <strong>docker-compose rm</strong>即可生成的项目</p>
+<h2 id="compose命令详解"><a href="#compose命令详解" class="headerlink" title="compose命令详解"></a>compose命令详解</h2><p>docker-compose的支持了docker的大部分命令，其使用方式也大同小异，具体可以看这里。<a href="https://yeasy.gitbooks.io/docker_practice/content/compose/commands.html#rm" target="_blank" rel="noopener">https://yeasy.gitbooks.io/docker_practice/content/compose/commands.html#rm</a></p>
+<h2 id="compose模板命令详解"><a href="#compose模板命令详解" class="headerlink" title="compose模板命令详解"></a>compose模板命令详解</h2><p>这里指的是写在yml里面的命令，详见：<a href="https://yeasy.gitbooks.io/docker_practice/content/compose/compose_file.html" target="_blank" rel="noopener">https://yeasy.gitbooks.io/docker_practice/content/compose/compose_file.html</a></p>
+<blockquote>
+<p>以上内容后面补完</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/23/docker-01/" rel="next" title="Docker中经常用到的命令">
+                <i class="fa fa-chevron-left"></i> Docker中经常用到的命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/31/hexo-github/" rel="prev" title="hexo + github 搭建免费个人博客">
+                hexo + github 搭建免费个人博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg"
+               alt="邝咖啡" />
+          <p class="site-author-name" itemprop="name">邝咖啡</p>
+           
+              <p class="site-description motion-element" itemprop="description">邝咖啡的工作记录</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Compose"><span class="nav-number">1.</span> <span class="nav-text">Docker Compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关键概念"><span class="nav-number">2.</span> <span class="nav-text">关键概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目"><span class="nav-number">2.1.</span> <span class="nav-text">项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先来一个简单的例子"><span class="nav-number">4.1.</span> <span class="nav-text">首先来一个简单的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#别人给的一个例子"><span class="nav-number">4.2.</span> <span class="nav-text">别人给的一个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wordpress案例"><span class="nav-number">4.3.</span> <span class="nav-text">wordpress案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除项目"><span class="nav-number">5.</span> <span class="nav-text">删除项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#compose命令详解"><span class="nav-number">6.</span> <span class="nav-text">compose命令详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#compose模板命令详解"><span class="nav-number">7.</span> <span class="nav-text">compose模板命令详解</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邝咖啡</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

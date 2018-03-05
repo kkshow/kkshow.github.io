@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="nginx,confd," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="http://p3gt0myn4.bkt.clouddn.com/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言confd 是一个使用GO语言编写的开源项目，用来自动构建文件。 通过简单的配置，可以自动生成配置文件以及重启服务，解决某些需要第三方介入重启的场景。 项目源码：https://github.com/kelseyhightower/confd 实操业务场景描述为了实现多租户模式，需要在创建了租户之后修改nginx的配置文件，同时让nginx重新读取配置（nginx reload）。">
+<meta name="keywords" content="nginx,confd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx动态配置方案：confd + redis">
+<meta property="og:url" content="http://jianyee.cn/2017/07/24/nginx-01/index.html">
+<meta property="og:site_name" content="一入码门深似海">
+<meta property="og:description" content="前言confd 是一个使用GO语言编写的开源项目，用来自动构建文件。 通过简单的配置，可以自动生成配置文件以及重启服务，解决某些需要第三方介入重启的场景。 项目源码：https://github.com/kelseyhightower/confd 实操业务场景描述为了实现多租户模式，需要在创建了租户之后修改nginx的配置文件，同时让nginx重新读取配置（nginx reload）。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T08:40:02.007Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx动态配置方案：confd + redis">
+<meta name="twitter:description" content="前言confd 是一个使用GO语言编写的开源项目，用来自动构建文件。 通过简单的配置，可以自动生成配置文件以及重启服务，解决某些需要第三方介入重启的场景。 项目源码：https://github.com/kelseyhightower/confd 实操业务场景描述为了实现多租户模式，需要在创建了租户之后修改nginx的配置文件，同时让nginx重新读取配置（nginx reload）。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jianyee.cn/2017/07/24/nginx-01/"/>
+
+
+
+
+
+  <title>nginx动态配置方案：confd + redis | 一入码门深似海</title>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65131446";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一入码门深似海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不写点什么的话就什么都不记得了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2017/07/24/nginx-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="邝咖啡">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一入码门深似海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nginx动态配置方案：confd + redis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T18:54:00+08:00">
+                2017-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>confd 是一个使用GO语言编写的开源项目，用来自动构建文件。</p>
+<p>通过简单的配置，可以自动生成配置文件以及重启服务，解决某些需要第三方介入重启的场景。</p>
+<p>项目源码：<a href="https://github.com/kelseyhightower/confd" target="_blank" rel="noopener">https://github.com/kelseyhightower/confd</a></p>
+<h2 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h2><h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>为了实现多租户模式，需要在创建了租户之后修改nginx的配置文件，同时让nginx重新读取配置（nginx reload）。</p>
+<a id="more"></a>
+<ul>
+<li>错误方案一</li>
+</ul>
+<div class="note warning"><p>原来想通过 php 直接进行 nginx reload，但是由于 php 所在的进程实际上是 worker进程，用户是 www-data，不够权限执行 nginx reload 命令，导致方案失败（当然如果强行给php赋权也有可能达到重载效果，但是风险实在太大）。</p></div>
+<ul>
+<li>错误方案二</li>
+</ul>
+<div class="note warning"><p>由php生成一个临时文件，然后写一个定时任务，通过识别临时文件，然后执行 nginx reload（后来了解到confd可以直接识别配置变动，所以放弃了这个方案）。</p></div>
+<ul>
+<li>选用方案</li>
+</ul>
+<div class="note success"><p>使用confd + redis来实现动态配置。confd设置成常驻模式，10秒读取一次redis，匹配键为 /nginx/* 的内容，然后生成配置文件。</p></div>
+<h3 id="安装-go"><a href="#安装-go" class="headerlink" title="安装 go"></a>安装 go</h3><p>由于confd是基于go语言开发的，所以需要先安装go环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 安装go的环境（linux版本是ubuntu16.04）</span><br><span class="line">apt-get install go</span><br><span class="line"></span><br><span class="line">// 配置go的目录</span><br><span class="line">export GOROOT=/usr/lib/go </span><br><span class="line">export GOBIN=$GOROOT/bin</span><br><span class="line">export PATH=$PATH:$GOBIN</span><br><span class="line">export GOPATH=$GOROOT/mygo (可选设置)</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装confd"><a href="#安装confd" class="headerlink" title="安装confd"></a>安装confd</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p $GOPATH/src/github.com/kelseyhightower</span><br><span class="line">$ git clone https://github.com/kelseyhightower/confd.git $GOPATH/src/github.com/kelseyhightower/confd</span><br><span class="line">$ cd $GOPATH/src/github.com/kelseyhightower/confd</span><br><span class="line">$ ./build</span><br></pre></td></tr></table></figure>
+<h3 id="安装完成后，即可进入-bin-目录下运行confd"><a href="#安装完成后，即可进入-bin-目录下运行confd" class="headerlink" title="安装完成后，即可进入 bin/目录下运行confd"></a>安装完成后，即可进入 bin/目录下运行confd</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls bin/</span><br><span class="line">./confd</span><br></pre></td></tr></table></figure>
+<h3 id="redis-confd-的对接案例"><a href="#redis-confd-的对接案例" class="headerlink" title="redis + confd 的对接案例"></a>redis + confd 的对接案例</h3><ul>
+<li>在redis中设置两个变量</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli set /myapp/database/url db.example.com</span><br><span class="line">redis-cli set /myapp/database/user rob</span><br></pre></td></tr></table></figure>
+<ul>
+<li>为confd创建模板和配置文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 创建文件 myconfig.toml</span><br><span class="line">/etc/confd/conf.d/myconfig.toml</span><br><span class="line"></span><br><span class="line">[template]</span><br><span class="line">src = &quot;myconfig.conf.tmpl&quot;</span><br><span class="line">dest = &quot;/tmp/myconfig.conf&quot;</span><br><span class="line">keys = [</span><br><span class="line">    &quot;/myapp/database/url&quot;,</span><br><span class="line">    &quot;/myapp/database/user&quot;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">// 创建文件</span><br><span class="line">/etc/confd/templates/myconfig.conf.tmpl</span><br><span class="line"></span><br><span class="line">[myconfig]</span><br><span class="line">database_url = &#123;&#123;getv &quot;/myapp/database/url&quot;&#125;&#125;</span><br><span class="line">database_user = &#123;&#123;getv &quot;/myapp/database/user&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>生成配置文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 执行生成操作</span><br><span class="line">./confd -onetime -backend redis -node 127.0.0.1:6379</span><br><span class="line"></span><br><span class="line">// 全路径地址</span><br><span class="line">/usr/lib/go/mygo/src/github.com/kelseyhightower/confd/bin/confd -onetime -backend redis -node 127.0.0.1:6379</span><br><span class="line"></span><br><span class="line">// 执行后提示一下信息</span><br><span class="line">INFO Backend set to redis</span><br><span class="line">INFO Starting confd</span><br><span class="line">INFO Backend nodes set to 127.0.0.1:6379</span><br><span class="line">INFO Target config /tmp/myconfig.conf out of sync</span><br><span class="line">INFO Target config /tmp/myconfig.conf has been updated</span><br></pre></td></tr></table></figure>
+<ul>
+<li>生成完后，去/tmp目录下打开生成的文件myconfig.conf，代码如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># This a comment</span><br><span class="line">[myconfig]</span><br><span class="line">database_url = db.example.com</span><br><span class="line">database_user = rob</span><br></pre></td></tr></table></figure>
+<h3 id="监听redis变化，自动生成配置"><a href="#监听redis变化，自动生成配置" class="headerlink" title="监听redis变化，自动生成配置"></a>监听redis变化，自动生成配置</h3><p>在对接SAAS服务时，需要用到自动部署，即生成租户实例后，系统向redis写入租户的信息，然后confd自动检测，生成配置以及重启nginx。</p>
+<h4 id="实现流程如下："><a href="#实现流程如下：" class="headerlink" title="实现流程如下："></a>实现流程如下：</h4><ul>
+<li>增加confd的配置文件，内容如下</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 创建confd的配置文件</span><br><span class="line">touch /etc/confd/confd.conf</span><br><span class="line"></span><br><span class="line">// 打开文本，写入以下内容</span><br><span class="line">backend = &quot;redis&quot;</span><br><span class="line">node = &quot;127.0.0.1:6379&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用常驻模式启动confd</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup /usr/lib/go/mygo/src/github.com/kelseyhightower/confd/bin/confd -interval 10 -config-file /etc/confd/confd.conf &gt; /var/log/confd.log &amp;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>-interval 10 # 10秒自动检测，如果nginx发生了变化，则触发配置更新 \<br>-config-file /etc/confd/confd.conf # confd读取的配置文件 \<br>-nohup 和结尾的 &amp; 后台运行confd \<br>-使用代码 > /var/log/confd.log 将confd输出的内容写入到日志文件中 \</p>
+</blockquote>
+<ul>
+<li>往redis中写入租户配置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 项目往redis中写入租户的配置</span><br><span class="line">redis-cli set /nginx/租户编码 &apos;&#123;&quot;id&quot;:&quot;租户编码&quot;, &quot;ip&quot;:&quot;127.0.0.1:8888&quot;&#125;&apos;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>confd识别后自动生成配置以及重启nginx</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 识别后的更新信息</span><br><span class="line">...</span><br><span class="line">INFO /etc/nginx/sites-enabled/p04 has md5sum cb25ec66f8ea8804b7ecc38f75587b86 should be bc2917f844417fa2eb288e503e00fe7a</span><br><span class="line">INFO Target config /etc/nginx/sites-enabled/p04 out of sync</span><br><span class="line">INFO Target config /etc/nginx/sites-enabled/p04 has been updated</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>dalao的博客：<a href="http://www.jianshu.com/p/bc85a54f98ff" target="_blank" rel="noopener">http://www.jianshu.com/p/bc85a54f98ff</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+            <a href="/tags/confd/" rel="tag"># confd</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/30/vue-01/" rel="prev" title="vue开发环境配置">
+                vue开发环境配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg"
+               alt="邝咖啡" />
+          <p class="site-author-name" itemprop="name">邝咖啡</p>
+           
+              <p class="site-description motion-element" itemprop="description">邝咖啡的工作记录</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实操"><span class="nav-number">2.</span> <span class="nav-text">实操</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#业务场景描述"><span class="nav-number">2.1.</span> <span class="nav-text">业务场景描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-go"><span class="nav-number">2.2.</span> <span class="nav-text">安装 go</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装confd"><span class="nav-number">2.3.</span> <span class="nav-text">安装confd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装完成后，即可进入-bin-目录下运行confd"><span class="nav-number">2.4.</span> <span class="nav-text">安装完成后，即可进入 bin/目录下运行confd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-confd-的对接案例"><span class="nav-number">2.5.</span> <span class="nav-text">redis + confd 的对接案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监听redis变化，自动生成配置"><span class="nav-number">2.6.</span> <span class="nav-text">监听redis变化，自动生成配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现流程如下："><span class="nav-number">2.6.1.</span> <span class="nav-text">实现流程如下：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邝咖啡</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
