@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="问题在构建的时候，如果构建的容器固定占用一个端口，则下次构建的时候，会因为端口占用导致容器启动失败； 同样，如果是同一个版本的镜像，则因为版本号的问题导致镜像无法生成。 所以这个时候，我们需要在每一次构建的时候检查是否存在旧的容器和镜像，删除，然后重新生成。 解决方案1、隐藏输出 首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。  代码逻辑如下：1">
+<meta name="description" content="问题在构建的时候，如果构建的容器固定占用一个端口，则下次构建的时候，会因为端口占用导致容器启动失败； 同样，如果是同一个版本的镜像，则因为版本号的问题导致镜像无法生成。 所以这个时候，我们需要在每一次构建的时候检查是否存在旧的容器和镜像，删除，然后重新生成。 解决方案1、隐藏输出 首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。">
 <meta name="keywords" content="docker,jenkins,devops">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jenkins删除重复的Docker容器">
 <meta property="og:url" content="http://jianyee.cn/2018/08/22/docker-03/index.html">
 <meta property="og:site_name" content="一入码门深似海">
-<meta property="og:description" content="问题在构建的时候，如果构建的容器固定占用一个端口，则下次构建的时候，会因为端口占用导致容器启动失败； 同样，如果是同一个版本的镜像，则因为版本号的问题导致镜像无法生成。 所以这个时候，我们需要在每一次构建的时候检查是否存在旧的容器和镜像，删除，然后重新生成。 解决方案1、隐藏输出 首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。  代码逻辑如下：1">
+<meta property="og:description" content="问题在构建的时候，如果构建的容器固定占用一个端口，则下次构建的时候，会因为端口占用导致容器启动失败； 同样，如果是同一个版本的镜像，则因为版本号的问题导致镜像无法生成。 所以这个时候，我们需要在每一次构建的时候检查是否存在旧的容器和镜像，删除，然后重新生成。 解决方案1、隐藏输出 首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-22T12:24:48.885Z">
+<meta property="og:updated_time" content="2018-08-22T12:27:30.178Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jenkins删除重复的Docker容器">
-<meta name="twitter:description" content="问题在构建的时候，如果构建的容器固定占用一个端口，则下次构建的时候，会因为端口占用导致容器启动失败； 同样，如果是同一个版本的镜像，则因为版本号的问题导致镜像无法生成。 所以这个时候，我们需要在每一次构建的时候检查是否存在旧的容器和镜像，删除，然后重新生成。 解决方案1、隐藏输出 首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。  代码逻辑如下：1">
+<meta name="twitter:description" content="问题在构建的时候，如果构建的容器固定占用一个端口，则下次构建的时候，会因为端口占用导致容器启动失败； 同样，如果是同一个版本的镜像，则因为版本号的问题导致镜像无法生成。 所以这个时候，我们需要在每一次构建的时候检查是否存在旧的容器和镜像，删除，然后重新生成。 解决方案1、隐藏输出 首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。">
 
 
 
@@ -345,6 +345,7 @@
 <h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="1、隐藏输出"><a href="#1、隐藏输出" class="headerlink" title="1、隐藏输出"></a>1、隐藏输出</h3><blockquote>
 <p>首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。</p>
 </blockquote>
+<a id="more"></a>
 <p>代码逻辑如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 通过添加 &gt;/dev/null 2&gt;&amp;1 &amp; 的后缀隐藏输出</span><br><span class="line"># 这段代码在shell里面是能够正常运转的，但是到了Jenkins里面就不行，</span><br><span class="line"># 应该是做了一些代码转义，导致实际执行的脚本有偏差。</span><br><span class="line">export tmpDockerName=&quot;k1803-dev&quot;</span><br><span class="line">export tmpDockerImgName=&quot;k1803:dev&quot;</span><br><span class="line">docker stop $tmpDockerName &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">docker rm $tmpDockerName &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">docker rmi $tmpDockerImgName &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure></p>
 <p>异常信息如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 这里根本看不到stop和rm的脚本结果，也看不到输出</span><br><span class="line">...</span><br><span class="line">[41_调试阿里云_jenkins] $ /bin/sh -xe /tmp/jenkins4463532441250897726.sh</span><br><span class="line">+ export tmpDockerName=k1803-dev</span><br><span class="line">+ export tmpDockerImgName=k1803:dev</span><br><span class="line">+ docker rmi k1803:dev</span><br><span class="line">[41_调试阿里云_jenkins] $ /bin/sh -xe /tmp/jenkins736423622155327327.sh</span><br><span class="line">+ export tmpDockerName=k1803-dev</span><br><span class="line">+ export tmpDockerImgName=k1803:dev</span><br><span class="line">+ cd /var/lib/jenkins/workspace/41_调试阿里云_jenkins</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
 <h3 id="2、if判断"><a href="#2、if判断" class="headerlink" title="2、if判断"></a>2、if判断</h3><blockquote>

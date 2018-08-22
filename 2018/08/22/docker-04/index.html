@@ -94,19 +94,19 @@
 
 
 
-<meta name="description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。 所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。 具体代码如下：12345// 将用户加入用户组sudo usermod -a -G docker">
+<meta name="description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。">
 <meta name="keywords" content="docker,jenkins,devops">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jenkins使用Docker提示permission denied">
 <meta property="og:url" content="http://jianyee.cn/2018/08/22/docker-04/index.html">
 <meta property="og:site_name" content="一入码门深似海">
-<meta property="og:description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。 所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。 具体代码如下：12345// 将用户加入用户组sudo usermod -a -G docker">
+<meta property="og:description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.stack.imgur.com/nz6Ig.png">
-<meta property="og:updated_time" content="2018-08-22T12:24:59.451Z">
+<meta property="og:updated_time" content="2018-08-22T12:28:00.716Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jenkins使用Docker提示permission denied">
-<meta name="twitter:description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。 所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。 具体代码如下：12345// 将用户加入用户组sudo usermod -a -G docker">
+<meta name="twitter:description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。">
 <meta name="twitter:image" content="https://i.stack.imgur.com/nz6Ig.png">
 
 
@@ -344,6 +344,7 @@
         <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：</p>
 <p><img src="https://i.stack.imgur.com/nz6Ig.png" alt="image"></p>
 <h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。</p>
+<a id="more"></a>
 <p>所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。</p>
 <p>具体代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 将用户加入用户组</span><br><span class="line">sudo usermod -a -G docker jenkins</span><br><span class="line"></span><br><span class="line">// 重启</span><br><span class="line">service jenkins restart</span><br></pre></td></tr></table></figure></p>
 
