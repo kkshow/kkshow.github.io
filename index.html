@@ -272,6 +272,262 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2018/08/22/docker-04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="邝咖啡">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一入码门深似海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/22/docker-04/" itemprop="url">Jenkins使用Docker提示permission denied</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-22T20:23:37+08:00">
+                2018-08-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：</p>
+<p><img src="https://i.stack.imgur.com/nz6Ig.png" alt="image"></p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。</p>
+<p>所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。</p>
+<p>具体代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 将用户加入用户组</span><br><span class="line">sudo usermod -a -G docker jenkins</span><br><span class="line"></span><br><span class="line">// 重启</span><br><span class="line">service jenkins restart</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2018/08/22/docker-03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="邝咖啡">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://p3gt0myn4.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一入码门深似海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/22/docker-03/" itemprop="url">Jenkins删除重复的Docker容器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-22T20:19:29+08:00">
+                2018-08-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在构建的时候，如果构建的容器固定占用一个端口，则下次构建的时候，会因为端口占用导致容器启动失败；</p>
+<p>同样，如果是同一个版本的镜像，则因为版本号的问题导致镜像无法生成。</p>
+<p>所以这个时候，我们需要在每一次构建的时候检查是否存在旧的容器和镜像，删除，然后重新生成。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="1、隐藏输出"><a href="#1、隐藏输出" class="headerlink" title="1、隐藏输出"></a>1、隐藏输出</h3><blockquote>
+<p>首先说明这是个失败案例，就算是使用了隐藏输出，但是不知道为何Jenkins还是能够捕捉到错误信息。</p>
+</blockquote>
+<p>代码逻辑如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 通过添加 &gt;/dev/null 2&gt;&amp;1 &amp; 的后缀隐藏输出</span><br><span class="line"># 这段代码在shell里面是能够正常运转的，但是到了Jenkins里面就不行，</span><br><span class="line"># 应该是做了一些代码转义，导致实际执行的脚本有偏差。</span><br><span class="line">export tmpDockerName=&quot;k1803-dev&quot;</span><br><span class="line">export tmpDockerImgName=&quot;k1803:dev&quot;</span><br><span class="line">docker stop $tmpDockerName &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">docker rm $tmpDockerName &gt; /dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">docker rmi $tmpDockerImgName &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure></p>
+<p>异常信息如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 这里根本看不到stop和rm的脚本结果，也看不到输出</span><br><span class="line">...</span><br><span class="line">[41_调试阿里云_jenkins] $ /bin/sh -xe /tmp/jenkins4463532441250897726.sh</span><br><span class="line">+ export tmpDockerName=k1803-dev</span><br><span class="line">+ export tmpDockerImgName=k1803:dev</span><br><span class="line">+ docker rmi k1803:dev</span><br><span class="line">[41_调试阿里云_jenkins] $ /bin/sh -xe /tmp/jenkins736423622155327327.sh</span><br><span class="line">+ export tmpDockerName=k1803-dev</span><br><span class="line">+ export tmpDockerImgName=k1803:dev</span><br><span class="line">+ cd /var/lib/jenkins/workspace/41_调试阿里云_jenkins</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h3 id="2、if判断"><a href="#2、if判断" class="headerlink" title="2、if判断"></a>2、if判断</h3><blockquote>
+<p>之前没写过shell语法，这次用了一下，也算是解决了这个问题。</p>
+</blockquote>
+<p>代码和处理逻辑如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 根据docker ps命令查询出容器的信息，</span><br><span class="line"># 然后通过grep过滤掉Docker自带的表头信息，然后再执行相关的容器和镜像删除命令。</span><br><span class="line"># 当然这里其实并不严谨，再严谨一点的话是容器和镜像分开判断的，这里先不处理。</span><br><span class="line">export tmpDockerName=&quot;k1803-dev&quot;</span><br><span class="line">export tmpDockerImgName=&quot;k1803:dev&quot;</span><br><span class="line"></span><br><span class="line">if docker ps -f name=$tmpDockerName | grep $tmpDockerName; </span><br><span class="line">then </span><br><span class="line">    docker stop $tmpDockerName</span><br><span class="line">    docker rm $tmpDockerName</span><br><span class="line">    docker rmi $tmpDockerImgName</span><br><span class="line">else </span><br><span class="line">	echo &quot;no running contrainer&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></p>
+<p>执行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># 原来不存在容器和镜像的情况</span><br><span class="line">...</span><br><span class="line">[41_调试阿里云_jenkins] $ /bin/sh -xe /tmp/jenkins8148152648330674981.sh</span><br><span class="line">+ export tmpDockerName=k1803-dev</span><br><span class="line">+ export tmpDockerImgName=k1803:dev</span><br><span class="line">+ grep k1803-dev</span><br><span class="line">+ docker ps -f name=k1803-dev</span><br><span class="line">+ echo no running contrainer</span><br><span class="line">no running contrainer</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"># 原来存在容器和镜像的情况</span><br><span class="line">...</span><br><span class="line">[41_调试阿里云_jenkins] $ /bin/sh -xe /tmp/jenkins8229513710379826908.sh</span><br><span class="line">+ export tmpDockerName=k1803-dev</span><br><span class="line">+ export tmpDockerImgName=k1803:dev</span><br><span class="line">+ grep k1803-dev</span><br><span class="line">+ docker ps -f name=k1803-dev</span><br><span class="line">d21b781adefd        k1803:dev           &quot;java -jar /var/lo...&quot;   About a minute ago   Up About a minute   0.0.0.0:10000-&gt;8080/tcp   k1803-dev</span><br><span class="line">+ docker stop k1803-dev</span><br><span class="line">k1803-dev</span><br><span class="line">+ docker rm k1803-dev</span><br><span class="line">k1803-dev</span><br><span class="line">+ docker rmi k1803:dev</span><br><span class="line">Untagged: k1803:dev</span><br><span class="line">Deleted: sha256:2adb86ea66284f49e2f3de1a31cc585229769d809dae6d49b53f51b2482d341f</span><br><span class="line">Deleted: sha256:b75ba89122f54f2a0b4b90c29b2b5e6d97b91a4623d55b278e6cbeb72df36a95</span><br><span class="line">Deleted: sha256:e41c386236dd7d7a6d4310aa5d0fcc980600dc917642b37150050bb6ee515efc</span><br><span class="line">Deleted: sha256:86cd290639d7edd26debde7f625d8b2bdf0cfdae1918325bced76971c924f985</span><br><span class="line">Deleted: sha256:93484809e4db0319d166669d61da7d9d3799f51111cef8e924bda49b81ea987f</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2018/03/02/jq-01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1223,7 +1479,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1236,7 +1492,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

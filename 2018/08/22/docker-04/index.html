@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo," />
+  <meta name="keywords" content="docker,jenkins,devops," />
 
 
 
@@ -94,24 +94,20 @@
 
 
 
-<meta name="description" content="前言在本章中，我们来讲解如何在你的博客中加入流量统计插件。 加入流量统计插件Hexo生成的博客本身是一个静态网站，所以它是没有流量统计能力的，为了增加这一特性，我们需要结合第三方统计平台来实现。">
-<meta name="keywords" content="hexo">
+<meta name="description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。 所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。 具体代码如下：12345// 将用户加入用户组sudo usermod -a -G docker">
+<meta name="keywords" content="docker,jenkins,devops">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo 加入流量统计插件">
-<meta property="og:url" content="http://jianyee.cn/2018/02/01/hexo-01/index.html">
+<meta property="og:title" content="Jenkins使用Docker提示permission denied">
+<meta property="og:url" content="http://jianyee.cn/2018/08/22/docker-04/index.html">
 <meta property="og:site_name" content="一入码门深似海">
-<meta property="og:description" content="前言在本章中，我们来讲解如何在你的博客中加入流量统计插件。 加入流量统计插件Hexo生成的博客本身是一个静态网站，所以它是没有流量统计能力的，为了增加这一特性，我们需要结合第三方统计平台来实现。">
+<meta property="og:description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。 所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。 具体代码如下：12345// 将用户加入用户组sudo usermod -a -G docker">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p3gt0myn4.bkt.clouddn.com/hexo-01-01.png">
-<meta property="og:image" content="http://p3gt0myn4.bkt.clouddn.com/hexo-01-02.png">
-<meta property="og:image" content="http://p3gt0myn4.bkt.clouddn.com/hexo-01-03.png">
-<meta property="og:image" content="http://p3gt0myn4.bkt.clouddn.com/hexo-01-04.png">
-<meta property="og:image" content="http://p3gt0myn4.bkt.clouddn.com/hexo-01-05.png">
-<meta property="og:updated_time" content="2018-03-02T08:40:02.006Z">
+<meta property="og:image" content="https://i.stack.imgur.com/nz6Ig.png">
+<meta property="og:updated_time" content="2018-08-22T12:24:59.451Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo 加入流量统计插件">
-<meta name="twitter:description" content="前言在本章中，我们来讲解如何在你的博客中加入流量统计插件。 加入流量统计插件Hexo生成的博客本身是一个静态网站，所以它是没有流量统计能力的，为了增加这一特性，我们需要结合第三方统计平台来实现。">
-<meta name="twitter:image" content="http://p3gt0myn4.bkt.clouddn.com/hexo-01-01.png">
+<meta name="twitter:title" content="Jenkins使用Docker提示permission denied">
+<meta name="twitter:description" content="问题在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：  解决方法我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。 所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。 具体代码如下：12345// 将用户加入用户组sudo usermod -a -G docker">
+<meta name="twitter:image" content="https://i.stack.imgur.com/nz6Ig.png">
 
 
 
@@ -140,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://jianyee.cn/2018/02/01/hexo-01/"/>
+  <link rel="canonical" href="http://jianyee.cn/2018/08/22/docker-04/"/>
 
 
 
 
 
-  <title>Hexo 加入流量统计插件 | 一入码门深似海</title>
+  <title>Jenkins使用Docker提示permission denied | 一入码门深似海</title>
   
 
 
@@ -278,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2018/02/01/hexo-01/">
+    <link itemprop="mainEntityOfPage" href="http://jianyee.cn/2018/08/22/docker-04/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="邝咖啡">
@@ -295,7 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hexo 加入流量统计插件</h1>
+          <h1 class="post-title" itemprop="name headline">Jenkins使用Docker提示permission denied</h1>
         
 
         <div class="post-meta">
@@ -307,8 +303,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-01T14:06:29+08:00">
-                2018-02-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-22T20:23:37+08:00">
+                2018-08-22
               </time>
             
 
@@ -345,39 +341,11 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在本章中，我们来讲解如何在你的博客中加入流量统计插件。</p>
-<h2 id="加入流量统计插件"><a href="#加入流量统计插件" class="headerlink" title="加入流量统计插件"></a>加入流量统计插件</h2><p>Hexo生成的博客本身是一个静态网站，所以它是没有流量统计能力的，为了增加这一特性，我们需要结合第三方统计平台来实现。</p>
-<a id="more"></a>
-<p>常用的有统计平台有下面的几家：</p>
-<ol>
-<li>Google Analytics（分析） <a href="https://www.google.com/intl/zh-CN/analytics/" target="_blank" rel="noopener">https://www.google.com/intl/zh-CN/analytics/</a></li>
-<li>腾讯分析 <a href="http://ta.qq.com/" target="_blank" rel="noopener">http://ta.qq.com/</a></li>
-<li>百度统计 <a href="https://tongji.baidu.com/web/welcome/login" target="_blank" rel="noopener">https://tongji.baidu.com/web/welcome/login</a></li>
-</ol>
-<p>鉴于谷歌一直是被墙的状态，我们这里使用腾讯分析来讲解。</p>
-<!-- more -->
-<h3 id="注册你的网站"><a href="#注册你的网站" class="headerlink" title="注册你的网站"></a>注册你的网站</h3><p>进入统计平台后，要注册你的站点，用于统计这个站点的流量。</p>
-<ol>
-<li><p>进入你的站点列表<br><img src="http://p3gt0myn4.bkt.clouddn.com/hexo-01-01.png" alt="image"></p>
-</li>
-<li><p>创建一个网站<br><img src="http://p3gt0myn4.bkt.clouddn.com/hexo-01-02.png" alt="image"></p>
-</li>
-<li><p>填入你的域名地址<br><img src="http://p3gt0myn4.bkt.clouddn.com/hexo-01-03.png" alt="image"></p>
-</li>
-<li><p>添加完成后，获取统计代码<br><img src="http://p3gt0myn4.bkt.clouddn.com/hexo-01-04.png" alt="image"></p>
-</li>
-<li><p>拿到这串代码后，就可以改造你的网站了<br><img src="http://p3gt0myn4.bkt.clouddn.com/hexo-01-05.png" alt="image"></p>
-</li>
-</ol>
-<h3 id="在Hexo中添加js代码"><a href="#在Hexo中添加js代码" class="headerlink" title="在Hexo中添加js代码"></a>在Hexo中添加js代码</h3><p>由于Hexo是通过模板文件生成静态页面的，所以我们在添加的时候直接去查找生成的模板文件修改即可。</p>
-<p><strong>不同的主题修改的文件不尽一致，但是基本上大同小异，学会一个之后其他主题也就很容易修改了。这里是用 NexT 这个主题来讲解。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 打开主题下的 siderbar.swig文件</span><br><span class="line">vim 项目路径/themes/next/layout/_custom/siderbar.swig</span><br><span class="line"></span><br><span class="line">// 添加分析网站给你的监控代码，例如：</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;http://tajs.qq.com/stats?sId=你的sid&quot; charset=&quot;UTF-8&quot;&gt;&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">// 重新部署Hexo</span><br><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-<p>然后去你的网站访问就可以看到流量信息了</p>
-<h3 id="加入流量统计插件-For-NexT"><a href="#加入流量统计插件-For-NexT" class="headerlink" title="加入流量统计插件 For NexT"></a>加入流量统计插件 For NexT</h3><p>不得不说 NexT 这个主题做的很齐全，该有的东西基本上都可以通过配置做出来。</p>
-<p>上面一段所说的统计分析插件，在NexT中已经集成了，我们进入主题的配置文件直接写入自己的sId即可。</p>
-<p>操作方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 打开站点的主题配置文件</span><br><span class="line">vim 项目路径/themes/next/_config.yml</span><br><span class="line"></span><br><span class="line">// 找到 tencent_analytics 一项，设置你的 sId</span><br><span class="line">tencent_analytics: 你的sid</span><br><span class="line"></span><br><span class="line">// 如果使用 百度统计，则用这一项</span><br><span class="line"># Baidu Analytics ID</span><br><span class="line">baidu_analytics: 你的sid</span><br><span class="line"></span><br><span class="line">// 如果使用 google，则用这一项</span><br><span class="line"># Google Analytics</span><br><span class="line">google_analytics: 你的sid</span><br></pre></td></tr></table></figure></p>
-<p>好了，刷新之后就同样可以看到流量信息了，就是这么简单。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>NexT主题官方文档 <a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">http://theme-next.iissnan.com/getting-started.html</a> \<br>NexT github <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a></p>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在Jenkins构建的时候使用了Docker的命令，提示异常，如下图：</p>
+<p><img src="https://i.stack.imgur.com/nz6Ig.png" alt="image"></p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>我们知道，Docker所在的权限组是docker，其他进程在使用Docker命令时，由于权限不够，就会提示这个错误。</p>
+<p>所以Jenkins的启动用户jenkins加入到Docker权限组，然后重启Jenkins即可。</p>
+<p>具体代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 将用户加入用户组</span><br><span class="line">sudo usermod -a -G docker jenkins</span><br><span class="line"></span><br><span class="line">// 重启</span><br><span class="line">service jenkins restart</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -395,7 +363,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag"># hexo</a>
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+            <a href="/tags/jenkins/" rel="tag"># jenkins</a>
+          
+            <a href="/tags/devops/" rel="tag"># devops</a>
           
         </div>
       
@@ -408,8 +380,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/31/hexo-github/" rel="next" title="hexo + github 搭建免费个人博客">
-                <i class="fa fa-chevron-left"></i> hexo + github 搭建免费个人博客
+              <a href="/2018/08/22/docker-03/" rel="next" title="Jenkins删除重复的Docker容器">
+                <i class="fa fa-chevron-left"></i> Jenkins删除重复的Docker容器
               </a>
             
           </div>
@@ -417,10 +389,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/02/jq-01/" rel="prev" title="Jquery 异步请求以及中止">
-                Jquery 异步请求以及中止 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -544,7 +512,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加入流量统计插件"><span class="nav-number">2.</span> <span class="nav-text">加入流量统计插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册你的网站"><span class="nav-number">2.1.</span> <span class="nav-text">注册你的网站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在Hexo中添加js代码"><span class="nav-number">2.2.</span> <span class="nav-text">在Hexo中添加js代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加入流量统计插件-For-NexT"><span class="nav-number">2.3.</span> <span class="nav-text">加入流量统计插件 For NexT</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">2.</span> <span class="nav-text">解决方法</span></a></li></ol></div>
             
 
           </div>
